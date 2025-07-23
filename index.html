@@ -360,7 +360,8 @@
             const generationPrompt = `
                 You are a helpful assistant designed to create educational assessments.
                 Your task is to generate a quiz about "Animal Habitats".
-                The quiz should contain ${mcqChecked ? '4 multiple-choice questions' : ''} ${mcqChecked && shortChecked ? 'and' : ''} ${shortChecked ? '2 short-answer questions' : ''}.
+                make the questions related to animal habitat project only and make questions whichcan test students about their project in depth which is animal habitat ask questions which are practical 
+                The quiz should contain ${mcqChecked ? '5 multiple-choice questions' : ''} ${mcqChecked && shortChecked ? 'and' : ''} ${shortChecked ? '2 short-answer questions' : ''}.
                 Provide your output in a single, valid JSON object. Do not include any text before or after the JSON.
                 The structure must be: { "mcqs": [{"id": "mcq1", "question": "...", "options": ["...", "..."], "correctAnswerIndex": 0}], "shortQuestions": [{"id": "sq1", "question": "..."}] }
                 Ensure arrays are empty if not requested. Questions should cover varied habitats.`;
