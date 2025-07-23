@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Animal Habitat Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset & Base Styles */
+        :root {
+            --primary-color: #E67E22; /* Sunset Orange */
+            --secondary-color: #D35400; /* Deeper Sunset Orange */
+            --bg-color: #FDF8F2; /* Warm Off-White */
+            --card-bg: #FFFFFF;
+            --text-dark: #4A3F35; /* Dark Brown */
+            --text-light: #8C7B70; /* Muted Brown */
+            --border-color: #EAE1D9;
+            --shadow-color: rgba(74, 63, 53, 0.07);
+            --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --border-radius: 16px;
+            --shadow: 0 4px 15px var(--shadow-color), 0 8px 25px var(--shadow-color);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main { flex: 1; }
+
+        /* Image Banner */
+        .image-banner {
+            height: 350px;
+            /* === NEW IMAGE URL ADDED HERE === */
+            background-image: url('https://plus.unsplash.com/premium_photo-1664302673689-6cf27cf23406?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8YW5pbWFsJTIwaGFiaXRhdHN8ZW58MHx8MHx8fDA%3D');
+            background-size: cover;
+            background-position: center center; /* Adjusted for better framing */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 0 2.5rem 0;
+        }
+        .header h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        .logo-svg {
+            width: 48px;
+            height: 48px;
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px var(--shadow-color), 0 12px 35px var(--shadow-color);
+        }
+
+        /* Configuration */
+        .config-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; text-align: center; }
+        .checkbox-group { display: flex; justify-content: center; gap: 2rem; margin-bottom: 2.5rem; }
+        .checkbox-item { display: flex; align-items: center; cursor: pointer; font-size: 1rem; font-weight: 500; }
+        .checkbox-item input[type="checkbox"] { display: none; }
+        .checkbox-custom { width: 22px; height: 22px; border: 2px solid var(--border-color); border-radius: 6px; margin-right: 0.75rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+        .checkbox-custom .tick { width: 12px; height: 12px; background: var(--primary-gradient); border-radius: 3px; transform: scale(0); transition: transform 0.2s ease; }
+        .checkbox-item input:checked + .checkbox-custom { border-color: var(--primary-color); }
+        .checkbox-item input:checked + .checkbox-custom .tick { transform: scale(1); }
+
+        /* Button Styles */
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.1rem; font-weight: 600; border: none; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(230, 126, 34, 0.4); }
+        .btn-secondary { background-color: var(--card-bg); color: var(--text-dark); border: 2px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #fdfdfd; border-color: #dcd1c8; transform: translateY(-2px); }
+        .btn svg { width: 20px; height: 20px; }
+        .actions-container { display: flex; gap: 1.5rem; margin-top: 2.5rem; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(30, 25, 21, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-container {
+            background-color: var(--bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95) translateY(10px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-container {
+            transform: scale(1) translateY(0);
+        }
+        .modal-content {
+             padding: 2.5rem;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s ease, transform 0.2s ease;
+            z-index: 1010;
+        }
+        .modal-close-btn:hover {
+            color: var(--text-dark);
+            transform: scale(1.1);
+        }
+        #modal-content h2 { text-align: center; font-weight: 600; font-size: 1.75rem; margin-bottom: 2rem; color: var(--text-dark); }
+        
+        /* Loading & Question Styles (reused for modal) */
+        .loading-container { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; padding: 4rem 0; text-align: center; color: var(--text-light); font-size: 1.1rem; font-weight: 500; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(230, 126, 34, 0.2); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .question-card { margin-bottom: 1.5rem; padding: 1.5rem; background: #fffdfa; border: 1px solid var(--border-color); border-radius: var(--border-radius); }
+        .question-text { font-weight: 500; margin-bottom: 1rem; font-size: 1.1rem; }
+        .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option { display: flex; align-items: center; padding: 0.85rem 1.25rem; border: 1px solid var(--border-color); border-radius: 10px; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .option:hover { background-color: #fff8f2; }
+        .option input { margin-right: 1rem; width: 18px; height: 18px; accent-color: var(--primary-color); }
+        .answer-input { width: 100%; min-height: 120px; padding: 1rem; border-radius: 10px; border: 1px solid var(--border-color); font-family: inherit; font-size: 1rem; resize: vertical; transition: border-color 0.2s, box-shadow 0.2s; background-color: #fff; }
+        .answer-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15); }
+        
+        /* Results Rubric Styles (for modal) */
+        .results-title { font-size: 1.75rem; font-weight: 600; text-align: center; margin-bottom: 2rem; color: var(--text-dark); }
+        .rubric-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; background-color: var(--card-bg); }
+        .rubric-table th, .rubric-table td { padding: 1rem 1.25rem; text-align: left; }
+        .rubric-table thead th { font-weight: 600; background-color: #fff8f2; }
+        .rubric-table tbody tr:not(.justification-row):nth-child(odd) { background-color: #fffdfa; }
+        .rubric-table td:first-child { font-weight: 600; }
+        .rating-cell { text-align: center; vertical-align: middle; }
+        .rating-marker { display: inline-block; padding: 0.4rem 1rem; border-radius: 99px; font-weight: 600; font-size: 0.9rem; color: white; }
+        .rating-excellent { background-color: var(--success-color); }
+        .rating-good { background-color: var(--primary-color); }
+        .rating-needs-improvement { background-color: var(--warning-color); color: var(--text-dark); }
+        .rating-incomplete { background-color: var(--danger-color); }
+        .overall-feedback { margin-top: 2rem; padding: 1.5rem; background-image: linear-gradient(to right, #fff9f4, #fdf8f2); border-left: 5px solid var(--primary-color); border-radius: var(--border-radius); }
+        .overall-feedback h3 { font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-color); }
+        
+        /* Footer */
+        .footer { text-align: center; padding: 2rem 0; margin-top: auto; font-size: 0.9rem; color: var(--text-light); border-top: 1px solid var(--border-color); }
+
+        /* Utility */
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="image-banner"></div>
+
+    <div class="container">
+        <header class="header">
+            <h1>
+                <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22V12M12 12L8 8M12 12L16 8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M3 10C3 7.23858 5.23858 5 8 5H16C18.7614 5 21 7.23858 21 10C21 12.7614 18.7614 15 16 15H8C5.23858 15 3 12.7614 3 10Z" fill="currentColor"/>
+                    </g>
+                </svg>
+                Animal Habitat Assessment
+            </h1>
+            <p>Explore the fascinating world of animal habitats with a custom quiz generated and graded by AI.</p>
+        </header>
+
+        <main>
+            <!-- Step 1: Configuration -->
+            <div id="config-section" class="card">
+                <h2 class="config-title">Choose Assessment Type</h2>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="mcq-type" checked>
+                        <span class="checkbox-custom"><span class="tick"></span></span>
+                        Multiple Choice
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="short-type" checked>
+                        <span class="checkbox-custom"><span class="tick"></span></span>
+                        Short Answer
+                    </label>
+                </div>
+                <button class="btn btn-primary" id="generate-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    Generate Assessment
+                </button>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="footer">
+        <p>© 2024 AI Assessment System. Powered by Google Gemini.</p>
+    </footer>
+
+    <!-- MODAL STRUCTURE -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div id="modal-container" class="modal-container">
+            <button id="modal-close-btn" class="modal-close-btn">×</button>
+            <div id="modal-content" class="modal-content">
+                <!-- Dynamic content goes here -->
+            </div>
+        </div>
+    </div>
+
+
+    <script src="config.js"></script>
+    <script>
+        const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+        const API_KEY = config.GOOGLE_API_KEY;
+
+        // Global State
+        let assessmentData = {};
+
+        // DOM Elements
+        const generateBtn = document.getElementById('generate-btn');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContainer = document.getElementById('modal-container');
+        const modalContent = document.getElementById('modal-content');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        // --- Modal Control Functions ---
+        function openModal() {
+            modalOverlay.classList.add('visible');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('visible');
+            setTimeout(() => { modalContent.innerHTML = ''; }, 300); // Clear content after transition
+        }
+        
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) { // Only close if clicking the dark background
+                closeModal();
+            }
+        });
+
+        // Main Event Listener
+        generateBtn.addEventListener('click', generateAssessment);
+        
+        // --- API & Logic Functions ---
+        async function callGeminiAPI(prompt) {
+            if (API_KEY === 'YOUR_GOOGLE_AI_API_KEY' || !API_KEY) {
+                modalContent.innerHTML = '<h2>Error</h2><p>API Key not found. Please add your Google AI API key to the script file.</p>';
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            responseMimeType: "application/json",
+                            temperature: 0.7
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${errorData.error.message}`);
+                }
+                
+                const data = await response.json();
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
+                    return JSON.parse(data.candidates[0].content.parts[0].text);
+                } else {
+                    throw new Error("Invalid response format from API.");
+                }
+
+            } catch (error) {
+                console.error('API Call Failed:', error);
+                modalContent.innerHTML = `<h2>Error</h2><p>An error occurred: ${error.message}. Please check your API key and try again.</p>`;
+                return null;
+            }
+        }
+
+        async function generateAssessment() {
+            const mcqChecked = document.getElementById('mcq-type').checked;
+            const shortChecked = document.getElementById('short-type').checked;
+
+            if (!mcqChecked && !shortChecked) {
+                alert('Please select at least one assessment type.');
+                return;
+            }
+
+            openModal();
+            modalContent.innerHTML = `
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <p>AI is generating your assessment... Please wait.</p>
+                </div>`;
+
+            const generationPrompt = `
+                You are a helpful assistant designed to create educational assessments.
+                Your task is to generate a quiz about "Animal Habitats".
+                The quiz should contain ${mcqChecked ? '4 multiple-choice questions' : ''} ${mcqChecked && shortChecked ? 'and' : ''} ${shortChecked ? '2 short-answer questions' : ''}.
+                Provide your output in a single, valid JSON object. Do not include any text before or after the JSON.
+                The structure must be: { "mcqs": [{"id": "mcq1", "question": "...", "options": ["...", "..."], "correctAnswerIndex": 0}], "shortQuestions": [{"id": "sq1", "question": "..."}] }
+                Ensure arrays are empty if not requested. Questions should cover varied habitats.`;
+            
+            const data = await callGeminiAPI(generationPrompt);
+
+            if (data) {
+                assessmentData = data;
+                renderAssessment();
+            }
+        }
+
+        function renderAssessment() {
+            let html = '<h2>Your Custom Assessment</h2>';
+            if (assessmentData.mcqs && assessmentData.mcqs.length > 0) {
+                assessmentData.mcqs.forEach((mcq, index) => {
+                    html += `
+                        <div class="question-card">
+                            <p class="question-text">${index + 1}. ${mcq.question}</p>
+                            <div class="options-container">
+                                ${mcq.options.map((option, optIndex) => `
+                                    <label class="option"><input type="radio" name="${mcq.id}" value="${optIndex}"><span>${option}</span></label>
+                                `).join('')}
+                            </div>
+                        </div>`;
+                });
+            }
+
+            if (assessmentData.shortQuestions && assessmentData.shortQuestions.length > 0) {
+                const startNum = (assessmentData.mcqs?.length || 0);
+                assessmentData.shortQuestions.forEach((q, index) => {
+                    html += `
+                        <div class="question-card">
+                            <p class="question-text">${startNum + index + 1}. ${q.question}</p>
+                            <textarea id="${q.id}" class="answer-input" placeholder="Type your answer here..."></textarea>
+                        </div>`;
+                });
+            }
+            html += `<div class="actions-container">
+                        <button class="btn btn-primary" id="modal-submit-btn" style="background: linear-gradient(135deg, #28a745, #218838); box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Submit for Grading
+                        </button>
+                    </div>`;
+            modalContent.innerHTML = html;
+            document.getElementById('modal-submit-btn').addEventListener('click', submitAndEvaluate);
+        }
+
+        async function submitAndEvaluate() {
+            const userAnswers = { mcq: {}, short: {} };
+            let allAnswered = true;
+
+            assessmentData.mcqs?.forEach(mcq => {
+                const selected = document.querySelector(`input[name="${mcq.id}"]:checked`);
+                if (selected) userAnswers.mcq[mcq.id] = parseInt(selected.value); else allAnswered = false;
+            });
+            assessmentData.shortQuestions?.forEach(q => {
+                const answer = document.getElementById(q.id).value.trim();
+                if (answer) userAnswers.short[q.id] = answer; else allAnswered = false;
+            });
+            
+            if (!allAnswered) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            modalContent.innerHTML = `<div class="loading-container"><div class="spinner"></div><p>AI is grading your assessment... This might take a moment.</p></div>`;
+
+            const evaluationPrompt = `
+                You are an expert biology teacher evaluating a student's assessment on "Animal Habitats".
+                Evaluate the student's answers based on the provided questions and a specific rubric.
+                Original Questions: ${JSON.stringify(assessmentData)}
+                Student's Answers: ${JSON.stringify(userAnswers)}
+                Rubric for Evaluation:
+                1.  **Factual Accuracy:** How correct are the answers? (10 pts)
+                2.  **Concept Comprehension:** Do short answers show understanding of concepts like adaptation? (10 pts)
+                3.  **Clarity & Detail:** How clear and detailed are the short answers? (10 pts)
+                For each criterion, provide a score, a rating (Excellent: 10, Good: 7-9, Needs Improvement: 4-6, Incomplete: 0-3), and a justification.
+                Finally, provide encouraging overall feedback.
+                Generate a JSON object with the exact structure: { "report": [{"criteria": "...", "score": 0, "rating": "...", "justification": "..."}], "overallFeedback": "..." }. Do not include any text outside the JSON.`;
+            
+            const resultData = await callGeminiAPI(evaluationPrompt);
+            
+            if (resultData) {
+                renderResults(resultData);
+            }
+        }
+        
+        function renderResults(data) {
+            const getRatingClass = (rating) => {
+                switch(rating?.toLowerCase()) {
+                    case 'excellent': return 'rating-excellent';
+                    case 'good': return 'rating-good';
+                    case 'needs improvement': return 'rating-needs-improvement';
+                    case 'incomplete': return 'rating-incomplete';
+                    default: return '';
+                }
+            };
+            
+            let tableHTML = `<table class="rubric-table"><thead><tr><th>Criteria</th><th>Excellent<br>(10)</th><th>Good<br>(7-9)</th><th>Needs Imp.<br>(4-6)</th><th>Incomplete<br>(0-3)</th></tr></thead><tbody>`;
+
+            data.report.forEach(item => {
+                const rating = item.rating || "Incomplete";
+                tableHTML += `<tr>
+                    <td>${item.criteria}</td>
+                    <td class="rating-cell">${rating.toLowerCase() === 'excellent' ? `<span class="rating-marker ${getRatingClass(rating)}">${item.score}</span>` : ''}</td>
+                    <td class="rating-cell">${rating.toLowerCase() === 'good' ? `<span class="rating-marker ${getRatingClass(rating)}">${item.score}</span>` : ''}</td>
+                    <td class="rating-cell">${rating.toLowerCase() === 'needs improvement' ? `<span class="rating-marker ${getRatingClass(rating)}">${item.score}</span>` : ''}</td>
+                    <td class="rating-cell">${rating.toLowerCase() === 'incomplete' ? `<span class="rating-marker ${getRatingClass(rating)}">${item.score}</span>` : ''}</td>
+                </tr>
+                <tr class="justification-row"><td colspan="5" style="padding: 0.5rem 1.25rem 1.25rem; font-style: italic; color: var(--text-light);">${item.justification}</td></tr>`;
+            });
+            tableHTML += '</tbody></table>';
+            
+            const feedbackHTML = `<div class="overall-feedback"><h3>Overall Feedback</h3><p>${data.overallFeedback}</p></div>`;
+            const restartButtonHTML = `<div class="actions-container"><button class="btn btn-secondary" id="modal-restart-btn"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h5M20 20v-5h-5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9a9 9 0 0114.13-6.36M20 15a9 9 0 01-14.13 6.36"></path></svg>Start a New Assessment</button></div>`;
+
+            modalContent.innerHTML = `<h2>Assessment Report Card</h2>${tableHTML}${feedbackHTML}${restartButtonHTML}`;
+            document.getElementById('modal-restart-btn').addEventListener('click', closeModal);
+        }
+    </script>
+</body>
+</html>
