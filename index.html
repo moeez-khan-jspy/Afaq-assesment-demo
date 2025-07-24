@@ -297,7 +297,7 @@
         }
 
         function renderAssessment() {
-            let html = '<h2>Your Custom Assessment</h2>';
+            let html = '<h2>Animal Habitat Assessment</h2>';
             if (assessmentData.mcqs && assessmentData.mcqs.length > 0) {
                 assessmentData.mcqs.forEach((mcq, index) => {
                     html += `<div class="question-card"><p class="question-text">${index + 1}. ${mcq.question}</p><div class="options-container">${mcq.options.map((option, optIndex) => `<label class="option"><input type="radio" name="${mcq.id}" value="${optIndex}"><span>${option}</span></label>`).join('')}</div></div>`;
