@@ -4,9 +4,7 @@
     padding: 0;
     box-sizing: border-box;
 }
-/* AIzaSyDaSzsIhpeXSoZwT_kEH7SXquzlsibOoDM */
-/* const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-const API_KEY ='AIzaSyDaSzsIhpeXSoZwT_kEH7SXquzlsibOoDM' */
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.6;
