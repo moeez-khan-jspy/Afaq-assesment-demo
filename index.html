@@ -25,7 +25,6 @@
             --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             --success-color: #28a745;
             --danger-color: #dc3545;
-            --warning-color: #ffc107;
             --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --border-radius: 16px;
             --shadow: 0 4px 15px var(--shadow-color), 0 8px 25px var(--shadow-color);
@@ -69,8 +68,9 @@
         .checkbox-item input:checked + .checkbox-custom { border-color: var(--primary-color); }
         .checkbox-item input:checked + .checkbox-custom .tick { transform: scale(1); }
         .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.1rem; font-weight: 600; border: none; border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
         .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(230, 126, 34, 0.4); }
+        .btn-primary:not(:disabled):hover { transform: translateY(-3px); box-shadow: 0 7px 20px rgba(230, 126, 34, 0.4); }
         .btn-secondary { background-color: var(--card-bg); color: var(--text-dark); border: 2px solid var(--border-color); }
         .btn-secondary:hover { background-color: #fdfdfd; border-color: #dcd1c8; transform: translateY(-2px); }
         .btn svg { width: 20px; height: 20px; }
@@ -95,11 +95,12 @@
         .file-label { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1.5rem; background: var(--primary-gradient); color: white; border-radius: 12px; cursor: pointer; }
         #pdf-upload-input { display: none; }
         #file-name-display { margin-top: 1.5rem; font-style: italic; color: var(--text-light); }
+        .api-key-input { width: 100%; padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); font-family: inherit; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; background-color: #fff; }
+        .api-key-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15); }
 
-        /* === NEW/UPDATED Detailed Report & Rubric Styles === */
+        /* Report & Rubric Styles */
         .report-section { margin-bottom: 2.5rem; }
         .report-section h3 { font-size: 1.5rem; font-weight: 600; color: var(--text-dark); border-bottom: 2px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
-        
         .rubric-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.95rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); overflow: hidden; background-color: var(--card-bg); }
         .rubric-table th, .rubric-table td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border-color); }
         .rubric-table thead th { font-weight: 600; background-color: #fff8f2; }
@@ -107,7 +108,6 @@
         .rubric-table .criterion-cell { font-weight: 600; width: 30%; }
         .rubric-table .justification-cell { color: var(--text-light); font-style: italic; }
         .rubric-table .score-cell { font-weight: 700; font-size: 1.2rem; text-align: center; color: var(--primary-color); vertical-align: middle; width: 15%; }
-        
         .mcq-result-item { padding: 1.25rem; border-radius: var(--border-radius); margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 1.25rem; }
         .mcq-result-item.correct { background-color: #eaf6ec; border: 1px solid #c8e6c9; }
         .mcq-result-item.incorrect { background-color: #fbe9e7; border: 1px solid #ffccbc; }
@@ -117,12 +117,14 @@
         .mcq-details p { margin: 0 0 0.5rem 0; font-size: 1rem; }
         .short-answer-result { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; margin-bottom: 1.5rem; }
         .feedback-box { margin-top: 1rem; padding: 1rem; background: #fffdfa; border-radius: 10px; border-left: 4px solid var(--primary-color); }
-        
         .final-summary-card { margin-top: 2rem; padding: 2rem; background-image: linear-gradient(135deg, #fff9f4, #fdf8f2); border: 1px solid var(--border-color); border-radius: var(--border-radius); text-align: center; }
         .final-summary-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
         .final-summary-card .final-score { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1rem; }
         .final-summary-card p { font-size: 1.1rem; color: var(--text-light); max-width: 600px; margin: 0 auto; }
+        
+        /* Footer & Update Key Link */
         .footer { text-align: center; padding: 2rem 0; margin-top: auto; font-size: 0.9rem; color: var(--text-light); border-top: 1px solid var(--border-color); }
+        #update-key-link { color: var(--primary-color); text-decoration: underline; cursor: pointer; font-weight: 500; }
     </style>
 </head>
 <body>
@@ -136,6 +138,7 @@
             <p>Explore the fascinating world of animal habitats with a custom quiz generated and graded by AI.</p>
         </header>
         <main>
+            <!-- API Key input has been removed from here -->
             <div id="config-section" class="card">
                 <h2 class="config-title">Choose Assessment Type</h2>
                 <div class="checkbox-group">
@@ -147,20 +150,21 @@
         </main>
     </div>
     <footer class="footer">
-        <p>© 2024 AI Assessment System. Powered by Google Gemini.</p>
+        <p>© Animal Habitat Assessment powered by Early age Development<span id="update-key-link">Update API Key</span>.</p>
     </footer>
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-container" class="modal-container">
+            <!-- Modal close button is now optional, as saving is the primary action -->
             <button id="modal-close-btn" class="modal-close-btn">×</button>
             <div id="modal-content" class="modal-content"></div>
         </div>
     </div>
 
     <script>
-        // Use a valid, fast model. 'gemini-1.5-flash' is a great choice.
         const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
-         const API_KEY ='AIzaSyDaSzsIhpeXSoZwT_kEH7SXquzlsibOoDM'
-        
+        // === NEW: Define a constant for the local storage key name ===
+        const LS_API_KEY_NAME = 'aiHabitatAssessmentApiKey';
+
         if (window.pdfjsLib) {
             pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js`;
         }
@@ -172,24 +176,80 @@
         const modalOverlay = document.getElementById('modal-overlay');
         const modalContent = document.getElementById('modal-content');
         const modalCloseBtn = document.getElementById('modal-close-btn');
+        const updateKeyLink = document.getElementById('update-key-link');
 
+
+        // === NEW: API Key Management Functions ===
+        function getApiKey() {
+            return localStorage.getItem(LS_API_KEY_NAME);
+        }
+
+        function promptForApiKey() {
+            modalContent.innerHTML = `
+                <h2>Google AI API Key Required</h2>
+                <p style="text-align:center; margin-bottom: 2rem; color: var(--text-light);">
+                    Please enter your Google AI API key to use this application. Your key is saved securely in your browser's local storage and is never sent anywhere else.
+                </p>
+                <input type="password" id="modal-api-key-input" class="api-key-input" placeholder="Enter your key here...">
+                <div class="actions-container">
+                    <button class="btn btn-primary" id="save-api-key-btn">Save and Continue</button>
+                </div>
+            `;
+            // Pre-fill if a key already exists, useful for updates
+            const apiKeyInput = document.getElementById('modal-api-key-input');
+            apiKeyInput.value = getApiKey() || '';
+
+            document.getElementById('save-api-key-btn').addEventListener('click', () => {
+                const key = apiKeyInput.value.trim();
+                if (key) {
+                    localStorage.setItem(LS_API_KEY_NAME, key);
+                    closeModal();
+                    generateBtn.disabled = false; // Enable the main button
+                    alert('API Key saved successfully!');
+                } else {
+                    alert('Please enter a valid API Key.');
+                }
+            });
+            openModal();
+        }
+
+        // === Standard Modal Controls ===
         function openModal() { modalOverlay.classList.add('visible'); }
         function closeModal() {
             modalOverlay.classList.remove('visible');
-            setTimeout(() => { modalContent.innerHTML = ''; assessmentData = {}; userQuizAnswers = {}; }, 300);
+            // Use a short delay to allow the fade-out animation to complete before clearing content
+            setTimeout(() => { modalContent.innerHTML = ''; }, 300);
         }
         modalCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
+
+        // === Event Listeners Setup ===
         generateBtn.addEventListener('click', generateAssessment);
+        updateKeyLink.addEventListener('click', promptForApiKey);
+
+        // === Check for API Key on Page Load ===
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!getApiKey()) {
+                generateBtn.disabled = true;
+                promptForApiKey();
+            } else {
+                generateBtn.disabled = false;
+            }
+        });
+        
+        
+        // === Core Application Logic (Now uses the stored API key) ===
         
         async function callGeminiAPI(prompt) {
-            if (API_KEY === 'YOUR_GOOGLE_AI_API_KEY' || !API_KEY) {
-                modalContent.innerHTML = '<h2>Configuration Error</h2><p>API Key not found. Please add your Google AI API key to the script.</p>';
+            const apiKey = getApiKey(); // Get key from local storage
+            if (!apiKey) {
+                modalContent.innerHTML = '<h2>API Key Missing</h2><p>Your API key is not configured. Please add it via the "Update API Key" link in the footer.</p>';
+                promptForApiKey(); // Re-prompt if key is missing during an operation
                 return null;
             }
             try {
-                const response = await fetch(`${API_BASE_URL}?key=${API_KEY}`, {
+                const response = await fetch(`${API_BASE_URL}?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -199,7 +259,10 @@
                 });
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`API Error: ${response.status} ${errorData.error.message}`);
+                    if(response.status === 400){
+                         throw new Error(`API Error (${response.status}): Invalid API Key provided. Please check your key and try again.`);
+                    }
+                    throw new Error(`API Error (${response.status}): ${errorData.error.message}`);
                 }
                 const data = await response.json();
                 if (data.candidates && data.candidates[0].content.parts[0]) {
@@ -207,16 +270,20 @@
                     const cleanText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
                     return JSON.parse(cleanText);
                 } else {
-                    throw new Error("Invalid response format from API.");
+                    throw new Error("Invalid response format from API. The model may have failed to generate valid JSON.");
                 }
             } catch (error) {
                 console.error('API Call Failed:', error);
-                modalContent.innerHTML = `<h2>Error</h2><p>An error occurred: ${error.message}. Check the console and the AI response format.</p>`;
+                modalContent.innerHTML = `<h2>Error</h2><p>${error.message}</p>`;
                 return null;
             }
         }
 
         async function generateAssessment() {
+            if (!getApiKey()) {
+                promptForApiKey();
+                return;
+            }
             const mcqChecked = document.getElementById('mcq-type').checked;
             const shortChecked = document.getElementById('short-type').checked;
             if (!mcqChecked && !shortChecked) { alert('Please select at least one assessment type.'); return; }
@@ -298,6 +365,10 @@
         }
 
         async function handleFinalSubmit() {
+            if (!getApiKey()) {
+                promptForApiKey();
+                return;
+            }
             const pdfFile = document.getElementById('pdf-upload-input').files[0];
             if (!pdfFile) { alert('Please upload your research report PDF.'); return; }
 
@@ -309,65 +380,41 @@
                      throw new Error("Could not extract sufficient text from the PDF. It might be an image-only PDF.");
                 }
 
-                // === THE NEW, RUBRIC-DRIVEN PROMPT ===
                 const evaluationPrompt = `
-                You are a meticulous biology professor evaluating a student's project on "Animal Habitats". The submission includes quiz answers and a research report.
+                You are a meticulous biology professor evaluating a student's project on "Animal Habitats". You are given quiz answers and a research report.
 
                 **INPUT DATA:**
-                1.  **Original Quiz:** ${JSON.stringify(assessmentData)}
-                2.  **Student's Quiz Answers:** ${JSON.stringify(userQuizAnswers)}
-                3.  **Student's Research Report (Text from PDF):**
+                1.  Original Quiz: ${JSON.stringify(assessmentData)}
+                2.  Student's Quiz Answers: ${JSON.stringify(userQuizAnswers)}
+                3.  Student's Research Report (Text from PDF):
                     ---
                     ${pdfText.substring(0, 15000)} 
                     ---
 
                 **YOUR TASK:**
-                Evaluate the entire submission (quiz + report) against the official rubric below. Provide detailed feedback and scores for each criterion. Then, provide specific feedback on the quiz answers. Finally, generate an overall summary.
+                Evaluate the entire submission against the official rubric. Provide detailed feedback and scores for each criterion. Provide specific feedback on quiz answers. Generate an overall summary.
                 
                 **OFFICIAL RUBRIC:**
-                -   **Criterion 1: Factual Accuracy & Knowledge (10 points):** Assesses the correctness of information in both the quiz and the report.
-                -   **Criterion 2: Depth of Analysis & Synthesis (10 points):** Assesses the ability to explain concepts, connect ideas, and synthesize information, rather than just listing facts.
-                -   **Criterion 3: Clarity, Organization & Evidence (10 points):** Assesses the structure and clarity of the report and the short answers, and the use of evidence to support claims.
+                -   Criterion 1: Factual Accuracy & Knowledge (10 points)
+                -   Criterion 2: Depth of Analysis & Synthesis (10 points)
+                -   Criterion 3: Clarity, Organization & Evidence (10 points)
 
                 **OUTPUT FORMAT:**
-                Generate a single, valid JSON object. Do not include any text or markdown formatting before or after the JSON. The JSON object must have the following structure exactly:
-
+                Generate a single, valid JSON object with this exact structure:
                 {
                   "rubricEvaluation": [
-                    {
-                      "criterion": "Factual Accuracy & Knowledge",
-                      "score": 0,
-                      "justification": "Your justification for the score, referencing specific examples from BOTH the quiz and the report."
-                    },
-                    {
-                      "criterion": "Depth of Analysis & Synthesis",
-                      "score": 0,
-                      "justification": "Your justification, explaining how well the student connected ideas from their research."
-                    },
-                    {
-                      "criterion": "Clarity, Organization & Evidence",
-                      "score": 0,
-                      "justification": "Your justification, commenting on the report's structure and the clarity of the short answers."
-                    }
+                    { "criterion": "Factual Accuracy & Knowledge", "score": 0, "justification": "Justification for the score, referencing quiz and report." },
+                    { "criterion": "Depth of Analysis & Synthesis", "score": 0, "justification": "Justification for the score, explaining idea connections." },
+                    { "criterion": "Clarity, Organization & Evidence", "score": 0, "justification": "Justification for the score, commenting on structure and clarity." }
                   ],
                   "mcqEvaluation": [
-                    {
-                      "question": "The original MCQ question text.",
-                      "userAnswerText": "The text of the option the user selected.",
-                      "correctAnswerText": "The text of the correct option.",
-                      "isCorrect": true
-                    }
+                    { "question": "...", "userAnswerText": "...", "correctAnswerText": "...", "isCorrect": true }
                   ],
                    "shortAnswerEvaluation": [
-                    {
-                      "question": "The original short answer question text.",
-                      "userAnswer": "The user's full typed answer.",
-                      "feedback": "Your detailed feedback on this specific answer."
-                    }
+                    { "question": "...", "userAnswer": "...", "feedback": "Detailed feedback on the answer." }
                   ],
-                  "overallFeedback": "A final, encouraging summary of the student's performance, referencing their strengths and weaknesses based on the rubric scores."
-                }
-                `;
+                  "overallFeedback": "Final summary based on rubric scores."
+                }`;
                 
                 const resultData = await callGeminiAPI(evaluationPrompt);
                 if (resultData) {
@@ -380,52 +427,35 @@
             }
         }
         
-        // === THE NEW, RUBRIC-FOCUSED RESULTS RENDERER ===
         function renderResults(data) {
             let html = `<h2>Detailed Assessment Report</h2>`;
             let totalUserScore = 0;
             let totalPossibleScore = 0;
 
-            // 1. Rubric Evaluation Section (The most important part)
             if (data.rubricEvaluation && data.rubricEvaluation.length > 0) {
                 html += `<div class="report-section"><h3>Rubric-Based Evaluation</h3>`;
                 html += `<table class="rubric-table"><thead><tr><th>Criterion</th><th>Feedback & Justification</th><th>Score</th></tr></thead><tbody>`;
                 data.rubricEvaluation.forEach(item => {
                     totalUserScore += item.score;
                     totalPossibleScore += 10;
-                    html += `
-                        <tr>
-                            <td class="criterion-cell">${item.criterion}</td>
-                            <td class="justification-cell">${item.justification}</td>
-                            <td class="score-cell">${item.score} / 10</td>
-                        </tr>`;
+                    html += `<tr><td class="criterion-cell">${item.criterion}</td><td class="justification-cell">${item.justification}</td><td class="score-cell">${item.score} / 10</td></tr>`;
                 });
                 html += `</tbody></table></div>`;
             }
 
-            // 2. Final Summary Section (Moved up for prominence)
             const finalPercentage = totalPossibleScore > 0 ? Math.round((totalUserScore / totalPossibleScore) * 100) : 0;
-            html += `
-                <div class="final-summary-card">
-                    <h3>Final Grade & Summary</h3>
-                    <div class="final-score">${finalPercentage}%</div>
-                    <p>${data.overallFeedback}</p>
-                </div>`;
+            html += `<div class="final-summary-card"><h3>Final Grade & Summary</h3><div class="final-score">${finalPercentage}%</div><p>${data.overallFeedback}</p></div>`;
             
-            // 3. Detailed Breakdown: MCQ Section
             if (data.mcqEvaluation && data.mcqEvaluation.length > 0) {
                 html += `<div class="report-section"><h3>Detailed Breakdown: Multiple Choice Questions</h3>`;
                 data.mcqEvaluation.forEach(mcq => {
                     const resultClass = mcq.isCorrect ? 'correct' : 'incorrect';
-                    const icon = mcq.isCorrect ? 
-                        `<svg class="icon correct-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>` : 
-                        `<svg class="icon incorrect-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>`;
+                    const icon = mcq.isCorrect ? `<svg class="icon correct-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>` : `<svg class="icon incorrect-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>`;
                     html += `<div class="mcq-result-item ${resultClass}">${icon}<div class="mcq-details"><p><strong>Question:</strong> ${mcq.question}</p><p><strong>Your Answer:</strong> ${mcq.userAnswerText}</p>${!mcq.isCorrect ? `<p><strong>Correct Answer:</strong> ${mcq.correctAnswerText}</p>` : ''}</div></div>`;
                 });
                 html += `</div>`;
             }
 
-            // 4. Detailed Breakdown: Short Answer Section
             if (data.shortAnswerEvaluation && data.shortAnswerEvaluation.length > 0) {
                 html += `<div class="report-section"><h3>Detailed Breakdown: Short Answer Questions</h3>`;
                 data.shortAnswerEvaluation.forEach(sa => {
@@ -434,7 +464,6 @@
                 html += `</div>`;
             }
 
-            // 5. Restart Button
             html += `<div class="actions-container"><button class="btn btn-secondary" id="modal-restart-btn">Start a New Assessment</button></div>`;
             
             modalContent.innerHTML = html;
